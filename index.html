@@ -1,0 +1,221 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+	<meta charset="UTF-8">
+	<link href="https://gmpg.org/xfn/11" rel="profile">
+
+	<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+
+	<link href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,700,300italic,400italic,700italic" rel="stylesheet" type="text/css">
+	<link href="https://fonts.googleapis.com/css?family=Shadows+Into+Light&display=swap" rel="stylesheet">
+  
+	<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+	
+	<link rel="stylesheet" type="text/css" href="css/style.css?v=1" crossorigin="anonymous">
+	
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/riot/3.13.2/riot+compiler.min.js"></script>
+
+	<title>
+		Write Aid v0.1
+	</title>
+
+<script
+  src="https://code.jquery.com/jquery-2.2.4.min.js"
+  integrity="sha256-BbhdlvQf/xTY9gja0Dq3HiwQF8LaCRTXxZKRutelT44="
+  crossorigin="anonymous"></script>
+
+<script type="riot/tag">
+  <moo class="moo">
+  	<div>
+    	<h1>Moo</h1>
+    </div>
+  </moo>
+</script>
+
+<script type="riot/tag">
+  <search-results-panel>
+    <style>
+        .search-results-panel {
+            border: 1px solid #ddd;
+            background-color: #f6f6f6;
+            width: 100%;
+            height: 100%;
+            padding: 20px;
+            margin-bottom: 10px;
+        }
+        
+        .search-results-panel header {
+            font-weight: bolder;
+            text-transform: capitalize;
+            text-align: center;
+            margin-bottom: 10px;
+        }
+        
+        .search-results-panel .results {
+        	color: #555;
+        }
+        
+        .search-results-panel .results .result {
+            display: inline-block;
+            padding: 2px 5px;
+            margin: 5px 5px;
+            background-color: white;
+        }
+        
+        .search-results-panel .results .result:hover {
+            background-color: #fff9c4;
+        }
+
+        .search-results-panel .toggle {
+		font-weight: normal;
+		font-family: Monospace;
+	}
+        
+    </style>
+  	<div class="search-results-panel">
+    	<header><span onclick={ togglePanel } class="toggle">[{ toggle == "open" ? "X" : "+" }]</span> { type } results { results.length }</header>
+
+        <div class="results" show={ toggle == "open" }>
+            <div class="result" each={ results }> { word } </span>
+        </div>
+    </div>
+    
+    let tag = this
+    
+    tag.type = tag.opts.type || ""
+    tag.phrase = tag.opts.phrase || ""
+    tag.results = []
+	tag.toggle = "open"
+	tag.togglePanel = () => {
+		tag.toggle == "open" ? "close" : "open"
+		tag.update({
+			toggle: tag.toggle == "open" ? "close" : "open"
+		})
+	}
+    
+    tag.on("update", () => {
+        
+        if( tag.phrase != tag.opts.phrase ) {
+
+    		tag.phrase = tag.opts.phrase
+            let queryUrl = ""
+            
+            switch( tag.type ) {
+                case "kind_of":
+                		queryUrl = `https://api.datamuse.com/words?rel_spc=${ tag.phrase }`	
+                		break
+                                
+                case "antonym":
+                                queryUrl = `https://api.datamuse.com/words?rel_ant=${ tag.phrase }`
+               	                break
+                                
+                case "rhyme":
+                                queryUrl = `https://api.datamuse.com/words?rel_rhy=${ tag.phrase }`
+               	                break
+                                
+                case "triggers":
+                                queryUrl = `https://api.datamuse.com/words?rel_trg=${ tag.phrase }`
+               	                break
+                                
+                case "synonym":
+                default:
+                  queryUrl = `https://api.datamuse.com/words?rel_syn=${ tag.phrase }`
+            }
+            
+            if( queryUrl ) {
+            	$.get(queryUrl, (resultSet) => {
+                    if( resultSet ) {
+                        tag.update({results: resultSet})
+                    }
+                })
+            }
+            
+            //alert(queryUrl)
+        }
+    })
+  </search-results-panel>
+</script>
+
+<script type="riot/tag">
+  <web-app>
+  	<style>
+    	.web-app .results-panel-holder {
+            display: block;
+            
+            
+            
+        }
+    </style>
+  	<div class="web-app">
+    	<h1>Webapp</h1>
+        
+        <input name="searchtext" onkeyup={ validate } type="text" placeholder="Word or phrase" value="steal" />
+        <button onclick={ searchWord }>GO</button>
+        
+        <div class="results-panel-holder">
+        	<search-results-panel type="synonym" phrase="{ phrase }" display={ panels.synonym.display } />
+            	<search-results-panel type="antonym" phrase="{ phrase }" />
+            	<search-results-panel type="rhyme" phrase="{ phrase }" />
+            	<search-results-panel type="triggers" phrase="{ phrase }" />
+            	<search-results-panel type="kind_of" phrase="{ phrase }" />  
+        </div>
+        
+        <br />
+    </div>
+    
+    let tag = this
+    
+    tag.strSearchText = "steal"
+    
+    let _defaultPanel = {
+        name: "", display: "on"
+    }
+    
+    let Panel = function(opts) {
+    	return Object.assign({}, _defaultPanel, opts)
+    }
+    
+    tag.panels = [ 
+        new Panel({name: "synonym"}), 
+        new Panel({name: "antonym"}), 
+        new Panel({name: "rhyme"}), 
+        new Panel({name: "triggers"}), 
+        new Panel({name: "kind_of"})
+    ]
+    
+    // alert(JSON.stringify(tag.panels))
+    
+    tag.validate = (e) => {
+        tag.update({
+            strSearchText: e.target.value
+        })
+    }
+    
+    tag.searchWord = (e) => {
+        tag.phrase = tag.strSearchText
+    }
+  </web-app>
+</script>
+
+</head>
+
+<body>
+<web-app />
+
+
+<script>
+	document.addEventListener("DOMContentLoaded", function(){
+  		// Handler when the DOM is fully loaded
+		riot.mount("*")
+	});
+</script>
+
+
+
+
+
+
+
+</body>
