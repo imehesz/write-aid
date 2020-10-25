@@ -71,6 +71,7 @@
         .search-results-panel .toggle {
 		font-weight: normal;
 		font-family: Monospace;
+		cursor: pointer;
 	}
         
     </style>
@@ -97,7 +98,7 @@
     
     tag.on("update", () => {
         
-        if( tag.phrase != tag.opts.phrase ) {
+        if( tag.phrase != tag.opts.phrase && tag.opts.phrase) {
 
     		tag.phrase = tag.opts.phrase
             let queryUrl = ""
@@ -141,33 +142,42 @@
 <script type="riot/tag">
   <web-app>
   	<style>
+	.web-app {
+		margin-top: 20px;
+	}
+
     	.web-app .results-panel-holder {
             display: block;
-            
-            
-            
         }
     </style>
   	<div class="web-app">
-    	<h1>Webapp</h1>
-        
-        <input name="searchtext" onkeyup={ validate } type="text" placeholder="Word or phrase" value="steal" />
-        <button onclick={ searchWord }>GO</button>
-        
-        <div class="results-panel-holder">
-        	<search-results-panel type="synonym" phrase="{ phrase }" display={ panels.synonym.display } />
-            	<search-results-panel type="antonym" phrase="{ phrase }" />
-            	<search-results-panel type="rhyme" phrase="{ phrase }" />
-            	<search-results-panel type="triggers" phrase="{ phrase }" />
-            	<search-results-panel type="kind_of" phrase="{ phrase }" />  
-        </div>
-        
-        <br />
-    </div>
+       
+		<div class="row">
+			<div class="col-6"> 
+				<div class="form-group">
+        				<input class="form-control" name="searchtext" onkeyup={ validate } type="text" placeholder="Word or phrase" />
+				</div>
+			</div>
+			<div class="col">
+				<div class="form-group">
+        				<button class="btn btn-primary" onclick={ searchWord }>GO</button>
+    					<h1 class="text-right" style="float:right">Write Aid v0.1</h1>
+				</div>
+			</div>
+		</div>
+
+        	<div class="results-panel-holder">
+        		<search-results-panel type="synonym" phrase="{ phrase }" />
+            		<search-results-panel type="kind_of" phrase="{ phrase }" />  
+            		<search-results-panel type="antonym" phrase="{ phrase }" />
+            		<search-results-panel type="triggers" phrase="{ phrase }" />
+            		<search-results-panel type="rhyme" phrase="{ phrase }" />
+        	</div>
+    	</div>
     
     let tag = this
     
-    tag.strSearchText = "steal"
+    tag.strSearchText = ""
     
     let _defaultPanel = {
         name: "", display: "on"
@@ -202,7 +212,10 @@
 </head>
 
 <body>
-<web-app />
+
+	<div class="container">
+		<web-app />
+	</div>
 
 
 <script>
