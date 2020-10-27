@@ -73,13 +73,17 @@
 		font-family: Monospace;
 		cursor: pointer;
 	}
+
+        .result a:hover {
+            text-decoration: none;
+        }
         
     </style>
   	<div class="search-results-panel">
     	<header><span onclick={ togglePanel } class="toggle">[{ toggle == "open" ? "X" : "+" }]</span> { type } results { results.length }</header>
 
         <div class="results" show={ toggle == "open" }>
-            <div class="result" each={ results }> { word } </span>
+            <div class="result" each={ results }> <a href="?phrase={ word }">{ word }</a> </span>
         </div>
     </div>
     
@@ -155,15 +159,17 @@
 		<div class="row">
 			<div class="col-6"> 
 				<div class="form-group">
-        				<input class="form-control" name="searchtext" onkeyup={ validate } type="text" placeholder="Word or phrase" />
+                    <input class="form-control" name="searchtext" onkeyup={ validate } type="text" placeholder="Word or phrase" value={ phrase } />
 				</div>
 			</div>
-			<div class="col">
+			<div class="col-1">
 				<div class="form-group">
         				<button class="btn btn-primary" onclick={ searchWord }>GO</button>
-    					<h1 class="text-right" style="float:right">Write Aid v0.1</h1>
 				</div>
 			</div>
+            <div class="col d-none d-lg-block">
+    		    <h1 class="text-right" style="float:right">Write Aid v0.1</h1>
+            </div>
 		</div>
 
         	<div class="results-panel-holder">
@@ -206,6 +212,17 @@
     tag.searchWord = (e) => {
         tag.phrase = tag.strSearchText
     }
+
+    setTimeout(() => {
+        let urlVars = getUrlVars()
+
+        if(urlVars && urlVars["phrase"]) {
+            tag.update({
+                phrase: urlVars["phrase"]
+            })
+        }
+    }, 0)
+
   </web-app>
 </script>
 
@@ -220,7 +237,12 @@
 
 <script>
 	document.addEventListener("DOMContentLoaded", function(){
-  		// Handler when the DOM is fully loaded
+		window.getUrlVars = () => {
+		    let vars = {}
+	        let parts = window.location.href.replace(/[?&]+([^=&]+)=([^&]*)/gi, (m,key,value) => vars[key] = value)
+			return vars
+		}
+
 		riot.mount("*")
 	});
 </script>
