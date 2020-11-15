@@ -271,6 +271,7 @@ TARGET ASSUMPTIONS
                     </div>
                     
                     <div class="split" id="venn-2">
+                        <span each={ word in vennIntersectWords }> { word } </span>
                     </div>
                     
                     <div class="split" id="venn-3">
@@ -298,6 +299,7 @@ TARGET ASSUMPTIONS
 
     tag.venn1CompareWords = []
     tag.venn2CompareWords = []
+    tag.vennIntersectWords = []
     
     tag.panels = [ 
         new Panel({name: "synonym"}), 
@@ -342,6 +344,7 @@ TARGET ASSUMPTIONS
     tag.compare = () => {
         tag.venn1CompareWords = []
         tag.venn2CompareWords = []
+        tag.vennIntersectWords = []
 
         let qOpts = ["syn", "spc", "trg"]
 
@@ -350,8 +353,6 @@ TARGET ASSUMPTIONS
 
 
         let promiseArr = queryArr1.concat(queryArr2).map((queryObj) => {
-            console.log(queryObj.url, queryObj.varName)
-
             return $.get( queryObj.url, (resultSet) => {
                 if( resultSet ) {
                     if (queryObj.varName == "venn1Compare") tag.venn1CompareWords.push(...resultSet.map((resObj) => resObj.word))
@@ -362,31 +363,10 @@ TARGET ASSUMPTIONS
 
         
         Promise.all(promiseArr).then(() => {
-            tag.update(); console.log(tag.venn1CompareWords, tag.venn2CompareWords)
+            // arr with unique elements
+            tag.vennIntersectWords = [...new Set(tag.venn1CompareWords.filter((word) => tag.venn2CompareWords.includes(word)))]
+            tag.update()
         })
-
-        /*
-        try {
-            const venn1Results = await Promise.all([
-                $.get( `https://api.datamuse.com/words?rel_${qOpts[0]}=${ tag.venn1Compare }`, (resultSet) => {
-                    if( resultSet ) console.log(resultSet)
-                }),
-
-                $.get( `https://api.datamuse.com/words?rel_${qOpts[1]}=${ tag.venn1Compare }`, (resultSet) => {
-                    if( resultSet ) console.log(resultSet)
-                }),
-
-                $.get( `https://api.datamuse.com/words?rel_${qOpts[2]}=${ tag.venn1Compare }`, (resultSet) => {
-                    if( resultSet ) console.log(resultSet)
-                })
-            ])
-            
-            console.log(venn1Results)
-            // do other actions
-        } catch(ex) { }
-        */
-
-
     }
 
     setTimeout(() => {
