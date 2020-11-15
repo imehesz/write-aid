@@ -1,0 +1,14 @@
+.split {
+    padding: 10px;
+    font-size: 12px;
+}
+
+.split, .gutter.gutter-horizontal {
+    float: left;
+}
+
+.gutter.gutter-horizontal {
+    cursor: ew-resize;
+    height: 80vh;
+    background-color: #ddd;
+}

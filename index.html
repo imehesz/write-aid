@@ -13,7 +13,8 @@
   
 	<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
 	
-	<link rel="stylesheet" type="text/css" href="css/style.css?v=1" crossorigin="anonymous">
+	<link rel="stylesheet" type="text/css" href="css/splitjs.css?v=20201115" crossorigin="anonymous">
+	<link rel="stylesheet" type="text/css" href="css/style.css?v=20201115" crossorigin="anonymous">
 	
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/riot/3.13.2/riot+compiler.min.js"></script>
 
@@ -188,6 +189,12 @@
                 <a class="nav-link" id="contact-tab" data-toggle="tab" href="#contact" role="tab" aria-controls="contact" aria-selected="false">Text</a>
             </li>
 
+            <li class="nav-item">
+                <a class="nav-link" id="contact-tab" data-toggle="tab" href="#venn" role="tab" aria-controls="venn" aria-selected="false">Venn Diagram</a>
+            </li>
+
+
+
             <li class="version-info">
                 Write Aid v0.1
             </li>
@@ -234,6 +241,43 @@ TARGET ASSUMPTIONS
 =======================</div>
                 </pre>
             </div>
+
+
+            <div class="tab-pane fade" id="venn" role="tabpanel" aria-labelledby="contact-tab">
+
+		        <div class="row">
+                    <div class="col-4">
+                        <div class="form-group">
+                            <input class="form-control" name="venn-1-compare" onkeyup={ validateVenn1 } type="text" placeholder="word" value={ venn1Compare } />
+				        </div>
+                    </div>
+
+                    <div class="col-4">
+                        <div class="form-group text-center">
+                            <button class="btn btn-primary" onclick="{ compare }" disabled={ !venn1Compare  || !venn2Compare } > >>> VENN IT <<< </button>
+				        </div>
+                    </div>
+
+                    <div class="col-4">
+                        <div class="form-group">
+                            <input class="form-control" name="venn-2-compare" onkeyup={ validateVenn2 } type="text" placeholder="word" value={ venn2Compare } />
+				        </div>
+                    </div>
+                </div>
+
+                <div>
+                    <div class="split" id="venn-1">
+                        <span each={ word in venn1CompareWords }> { word } </span>
+                    </div>
+                    
+                    <div class="split" id="venn-2">
+                    </div>
+                    
+                    <div class="split" id="venn-3">
+                        <span each={ word in venn2CompareWords }> { word } </span>
+                    </div>
+                </div>
+            </div>
         </div>
        
 
@@ -251,6 +295,9 @@ TARGET ASSUMPTIONS
     let Panel = function(opts) {
     	return Object.assign({}, _defaultPanel, opts)
     }
+
+    tag.venn1CompareWords = []
+    tag.venn2CompareWords = []
     
     tag.panels = [ 
         new Panel({name: "synonym"}), 
@@ -270,6 +317,76 @@ TARGET ASSUMPTIONS
     
     tag.searchWord = (e) => {
         tag.phrase = tag.strSearchText
+    }
+
+    tag.validateVenn1 = (e) => {
+        let venn1Compare = e.target.value
+        tag.update({venn1Compare})
+    }
+
+    tag.validateVenn2 = (e) => {
+        let venn2Compare = e.target.value
+        tag.update({venn2Compare})
+    }
+
+    let generateQueryArr = (qOpts, word, varName) => {
+        let retArr = []
+
+        qOpts.map((o) => {
+            retArr.push({url: `https://api.datamuse.com/words?rel_${ o }=${ word }`, varName})
+        })
+
+        return retArr
+    }
+
+    tag.compare = () => {
+        tag.venn1CompareWords = []
+        tag.venn2CompareWords = []
+
+        let qOpts = ["syn", "spc", "trg"]
+
+        let queryArr1 = generateQueryArr(qOpts, tag.venn1Compare, "venn1Compare")
+        let queryArr2 = generateQueryArr(qOpts, tag.venn2Compare, "venn2Compare")
+
+
+        let promiseArr = queryArr1.concat(queryArr2).map((queryObj) => {
+            console.log(queryObj.url, queryObj.varName)
+
+            return $.get( queryObj.url, (resultSet) => {
+                if( resultSet ) {
+                    if (queryObj.varName == "venn1Compare") tag.venn1CompareWords.push(...resultSet.map((resObj) => resObj.word))
+                    if (queryObj.varName == "venn2Compare") tag.venn2CompareWords.push(...resultSet.map((resObj) => resObj.word))
+                }
+            })
+        })
+
+        
+        Promise.all(promiseArr).then(() => {
+            tag.update(); console.log(tag.venn1CompareWords, tag.venn2CompareWords)
+        })
+
+        /*
+        try {
+            const venn1Results = await Promise.all([
+                $.get( `https://api.datamuse.com/words?rel_${qOpts[0]}=${ tag.venn1Compare }`, (resultSet) => {
+                    if( resultSet ) console.log(resultSet)
+                }),
+
+                $.get( `https://api.datamuse.com/words?rel_${qOpts[1]}=${ tag.venn1Compare }`, (resultSet) => {
+                    if( resultSet ) console.log(resultSet)
+                }),
+
+                $.get( `https://api.datamuse.com/words?rel_${qOpts[2]}=${ tag.venn1Compare }`, (resultSet) => {
+                    if( resultSet ) console.log(resultSet)
+                })
+            ])
+            
+            console.log(venn1Results)
+            // do other actions
+        } catch(ex) { }
+        */
+
+
     }
 
     setTimeout(() => {
@@ -293,6 +410,7 @@ TARGET ASSUMPTIONS
 		<web-app />
 	</div>
 
+<script src="./js/split.min.js"></script>
 
 <script>
 	document.addEventListener("DOMContentLoaded", function(){
@@ -301,6 +419,12 @@ TARGET ASSUMPTIONS
 	        let parts = window.location.href.replace(/[?&]+([^=&]+)=([^&]*)/gi, (m,key,value) => vars[key] = value)
 			return vars
 		}
+
+        
+        setTimeout(() => {
+            Split(["#venn-1", "#venn-2", "#venn-3"]);
+        }, 0)
+        
 
 		riot.mount("*")
 	});
