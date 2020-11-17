@@ -173,6 +173,29 @@
             right:0;
             padding: 11px 0;
         }
+
+        .web-app .venn-word {
+            display: inline-block;
+            padding: 2px 5px;
+            margin: 5px 5px;
+            background-color: white;
+        }
+
+
+        .web-app .venn-word:hover {
+            background-color: #fff9c4;
+        }
+
+        .web-app .venn-word__result {
+            font-size: 16px;
+        }
+
+        .web-app .venn-words-wrapper {
+            border: 1px solid #ddd;
+            background-color: #f6f6f6;
+            padding: 20px;
+            margin-bottom: 10px;
+        }
     </style>
   	<div class="web-app">
 
@@ -266,16 +289,16 @@ TARGET ASSUMPTIONS
                 </div>
 
                 <div>
-                    <div class="split" id="venn-1">
-                        <span each={ word in venn1CompareWords }> { word } </span>
+                    <div class="split venn-words-wrapper" id="venn-1">
+                        <span class="venn-word" each={ word in venn1CompareWords }> <a href="#" onclick={ setVenn1 } >{ word }</a> </span>
                     </div>
                     
-                    <div class="split" id="venn-2">
-                        <span each={ word in vennIntersectWords }> { word } </span>
+                    <div class="split venn-words-wrapper" id="venn-2">
+                        <span class="venn-word venn-word__result" each={ word in vennIntersectWords }> { word } </span>
                     </div>
                     
-                    <div class="split" id="venn-3">
-                        <span each={ word in venn2CompareWords }> { word } </span>
+                    <div class="split venn-words-wrapper" id="venn-3">
+                        <span class="venn-word" each={ word in venn2CompareWords }> <a href="#" onclick={ setVenn2 }>{ word }</a> </span>
                     </div>
                 </div>
             </div>
@@ -330,6 +353,9 @@ TARGET ASSUMPTIONS
         let venn2Compare = e.target.value
         tag.update({venn2Compare})
     }
+
+    tag.setVenn1 = (e) => tag.venn1Compare = e.target.innerText
+    tag.setVenn2 = (e) => tag.venn2Compare = e.target.innerText
 
     let generateQueryArr = (qOpts, word, varName) => {
         let retArr = []
