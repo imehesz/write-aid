@@ -196,6 +196,10 @@
             padding: 20px;
             margin-bottom: 10px;
         }
+
+        .web-app .btn.btn-large {
+            font-size: 22px;
+        }
     </style>
   	<div class="web-app">
 
@@ -234,7 +238,7 @@
 			        </div>
 			        <div class="col-1">
 				        <div class="form-group">
-        				        <button class="btn btn-primary" onclick={ searchWord }>GO</button>
+        				        <button class="btn btn-primary btn-large" onclick={ searchWord }>GO</button>
 				        </div>
 			        </div>
 		        </div>
@@ -277,7 +281,7 @@ TARGET ASSUMPTIONS
 
                     <div class="col-4">
                         <div class="form-group text-center">
-                            <button class="btn btn-primary" onclick="{ compare }" disabled={ !venn1Compare  || !venn2Compare } > >>> VENN IT <<< </button>
+                            <button class="btn btn-primary btn-large" onclick="{ compare }" disabled={ !venn1Compare  || !venn2Compare } > >>> VENN IT <<< </button>
 				        </div>
                     </div>
 
@@ -335,9 +339,13 @@ TARGET ASSUMPTIONS
     // alert(JSON.stringify(tag.panels))
     
     tag.validate = (e) => {
-        tag.update({
-            strSearchText: e.target.value
-        })
+        if( e.key === "Enter" && e.keyCode === 13 ) {
+           tag.searchWord() 
+        } else {
+            tag.update({
+                strSearchText: e.target.value
+            })
+        }
     }
     
     tag.searchWord = (e) => {
