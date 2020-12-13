@@ -223,13 +223,16 @@
             </li>
 
             <li class="nav-item">
-                <a class="nav-link" id="contact-tab" data-toggle="tab" href="#contact" role="tab" aria-controls="contact" aria-selected="false">Text</a>
+                <a class="nav-link" id="contact-tab" data-toggle="tab" href="#contact" role="tab" aria-controls="contact" aria-selected="false">Free Text</a>
             </li>
 
             <li class="nav-item">
                 <a class="nav-link" id="contact-tab" data-toggle="tab" href="#venn" role="tab" aria-controls="venn" aria-selected="false">Venn Diagram</a>
             </li>
 
+            <li class="nav-item">
+                <a class="nav-link" id="contact-tab" data-toggle="tab" href="#others" role="tab" aria-controls="others" aria-selected="false">Others</a>
+            </li>
 
 
             <li class="version-info">
@@ -240,6 +243,7 @@
         <div class="tab-content" id="myTabContent">
             <div class="tab-pane fade show active" id="home" role="tabpanel" aria-labelledby="home-tab">
 
+                <!-- TODO make this a component! -->
 		        <div class="row">
 			        <div class="col-6"> 
 				        <div class="form-group">
@@ -266,7 +270,11 @@
             <div class="tab-pane fade" id="profile" role="tabpanel" aria-labelledby="profile-tab">
                 <div>
                     <iframe src="https://tobloef.com/text2mindmap/" width="100%" height="800px" border="0"></iframe>
-                </div>           
+                </div>
+
+                <div>
+                    Thank you: <a href="https://tobloef.com/text2mindmap/" target="_blank">Tobloef.com</a>
+                </div>
             </div>
 
             <div class="tab-pane fade" id="contact" role="tabpanel" aria-labelledby="contact-tab">
@@ -316,6 +324,60 @@ TARGET ASSUMPTIONS
                     </div>
                 </div>
             </div>
+        
+        
+            <div class="tab-pane fade" id="others" role="tabpanel" aria-labelledby="others-tab">
+                <!-- TODO make this a component! -->
+		        <div class="row">
+			        <div class="col-6"> 
+				        <div class="form-group">
+                            <input class="form-control form-control-lg" name="searchtext" onkeyup={ validate } type="text" placeholder="Word or phrase" value={ phrase } />
+				        </div>
+			        </div>
+			        <div class="col-1">
+				        <div class="form-group">
+        				        <button class="btn btn-primary btn-large" onclick={ searchWord }>GO</button>
+				        </div>
+			        </div>
+		        </div>
+               
+
+                <div class="row">
+                    <div class="col-12">
+                        <h3>Meaning of </h3>
+                        <ul>
+                            <li>
+                                Merriam-Webster: <a target="_blank" href="https://www.merriam-webster.com/dictionary/{ phrase }">{ phrase }</a>
+                            </li>
+                            <li>
+                                Dictionary.com: <a target="_blank" href="https://www.dictionary.com/browse/{ phrase }">{ phrase }</a>
+                            </li>
+                            <li>
+                                Wikipedia: <a target="_blank" href="https://en.wikipedia.org/wiki/{ phrase }">{ phrase }</a>
+                            </li>
+                        </ul>
+
+                        <h3>Phrases</h3>
+                        <ul>
+                            <li>
+                                The FREE Dictionary: <a target="_blank" href="https://idioms.thefreedictionary.com/{ phrase }">{ phrase }</a>
+                            </li>
+                            <li>
+                                Phrases.org.uk: <a target="_blank" href="https://www.phrases.org.uk/phrase-thesaurus/related/{ phrase }.html">{ phrase }</a>
+                            </li>
+                        </ul>
+
+                        <h3>Synonymns</h3>
+                        <ul>
+                            <li>
+                                Thesaurus.com: <a target="_blank" href="https://www.thesaurus.com/browse/{ phrase }">{ phrase }</a>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+
+            </div>
+
         </div>
        
 
