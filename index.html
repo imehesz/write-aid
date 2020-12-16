@@ -27,6 +27,7 @@
 	<link rel="stylesheet" type="text/css" href="css/splitjs.css?v=20201115" crossorigin="anonymous">
 	<link rel="stylesheet" type="text/css" href="css/style.css?v=20201115" crossorigin="anonymous">
 	
+	<script src="./tags/word-input.tag.html" type="riot/tag"></script>
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/riot/3.13.2/riot+compiler.min.js"></script>
 
 	<title>
@@ -243,19 +244,7 @@
         <div class="tab-content" id="myTabContent">
             <div class="tab-pane fade show active" id="home" role="tabpanel" aria-labelledby="home-tab">
 
-                <!-- TODO make this a component! -->
-		        <div class="row">
-			        <div class="col-6"> 
-				        <div class="form-group">
-                            <input class="form-control form-control-lg" name="searchtext" onkeyup={ validate } type="text" placeholder="Word or phrase" value={ phrase } />
-				        </div>
-			        </div>
-			        <div class="col-1">
-				        <div class="form-group">
-        				        <button class="btn btn-primary btn-large" onclick={ searchWord }>GO</button>
-				        </div>
-			        </div>
-		        </div>
+                <word-input onvalidate={ validate } onsubmitform={ searchWord } word={ phrase }></word-input>
 
         	    <div class="results-panel-holder">
         		    <search-results-panel type="synonym" phrase="{ phrase }" />
@@ -327,20 +316,8 @@ TARGET ASSUMPTIONS
         
         
             <div class="tab-pane fade" id="others" role="tabpanel" aria-labelledby="others-tab">
-                <!-- TODO make this a component! -->
-		        <div class="row">
-			        <div class="col-6"> 
-				        <div class="form-group">
-                            <input class="form-control form-control-lg" name="searchtext" onkeyup={ validate } type="text" placeholder="Word or phrase" value={ phrase } />
-				        </div>
-			        </div>
-			        <div class="col-1">
-				        <div class="form-group">
-        				        <button class="btn btn-primary btn-large" onclick={ searchWord }>GO</button>
-				        </div>
-			        </div>
-		        </div>
-               
+
+                <word-input onvalidate={ validate } onsubmitform={ searchWord } word={ phrase }></word-input>
 
                 <div class="row">
                     <div class="col-6">
@@ -438,6 +415,7 @@ TARGET ASSUMPTIONS
     
     tag.searchWord = (e) => {
         tag.phrase = tag.strSearchText
+        tag.update()
     }
 
     tag.validateVenn1 = (e) => {
@@ -522,11 +500,9 @@ TARGET ASSUMPTIONS
 			return vars
 		}
 
-        
         setTimeout(() => {
             Split(["#venn-1", "#venn-2", "#venn-3"]);
-        }, 0)
-        
+        }, 500)
 
 		riot.mount("*")
 	});

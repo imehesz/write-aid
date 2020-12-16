@@ -1,0 +1,34 @@
+<word-input>
+    <div class="row word-input">
+        <div class="col-6"> 
+	        <div class="form-group">
+                <input class="form-control form-control-lg" name="searchtext" onkeyup={ actionValidate } type="text" placeholder="Word or phrase" value={ word } />
+	        </div>
+        </div>
+        <div class="col-1">
+	        <div class="form-group">
+			        <button class="btn btn-primary btn-large" onclick={ actionSubmit }>GO</button>
+	        </div>
+        </div>
+    </div>
+
+    let tag = this
+
+    tag.word = tag.opts.word
+
+    tag.actionValidate = (e) => {
+        if( tag.opts.onvalidate && typeof(tag.opts.onvalidate) == "function" ) {
+            tag.opts.onvalidate(e) 
+        }
+    }
+
+    tag.actionSubmit = (e) => {
+        if( tag.opts.onsubmitform && typeof(tag.opts.onsubmitform) == "function" ) {
+            tag.opts.onsubmitform(e)
+        }
+    }
+
+    tag.on("update", () => {
+        tag.word = tag.opts.word
+    })
+</word-input>
