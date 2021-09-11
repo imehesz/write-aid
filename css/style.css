@@ -12,3 +12,10 @@
     height: 80vh;
     background-color: #ddd;
 }
+
+footer {
+    text-align: center;
+    margin-top: 50px;
+    font-size: small;
+    border-top: 1px solid lightgray;
+}
