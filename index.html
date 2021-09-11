@@ -30,7 +30,7 @@
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/riot/3.13.2/riot+compiler.min.js"></script>
 
 	<title>
-		Write Aid v0.1
+		Write Aid v0.2
 	</title>
 
 <script
@@ -236,7 +236,7 @@
 
 
             <li class="version-info">
-                Write Aid v0.1
+                Write Aid v0.2
             </li>
         </ul
         >
@@ -392,6 +392,29 @@ TARGET ASSUMPTIONS
                     </div>
                 </div>
 
+                <hr>
+
+                <div class="row">
+                    <div class="col-12">
+                        <h3>6 Degrees of Wikipedia</h3>
+                        <p>Type in 2 words or phrase and find the connection between them on Wikipedia pages</p>
+                                       </div>
+                </div>
+                <div class="row">
+                        <div class="col-4">
+                            <input class="form-control form-control-lg" type="text" placeholder="Source" onkeyup={ setWiki6Source }>
+                        </div>
+                        <div class="col-1">
+                            <h2>=></h2>
+                        </div>
+                        <div class="col-4">
+                            <input class="form-control form-control-lg" type="text" placeholder="Target" onkeyup={ setWiki6Target }>
+                        </div>
+                        <div class="col-3">
+                            <a href="https://www.sixdegreesofwikipedia.com/?source={ wiki6Source }&target={ wiki6Target }" target="_blank" class="btn btn-primary btn-large">GO</a>
+                        </div>
+                </div>
+
             </div>
 
         </div>
@@ -415,6 +438,8 @@ TARGET ASSUMPTIONS
     tag.venn1CompareWords = []
     tag.venn2CompareWords = []
     tag.vennIntersectWords = []
+    tag.wiki6Source = ""
+    tag.wiki6Target = ""
     
     tag.panels = [ 
         new Panel({name: "synonym"}), 
@@ -452,6 +477,9 @@ TARGET ASSUMPTIONS
 
     tag.setVenn1 = (e) => tag.venn1Compare = e.target.innerText
     tag.setVenn2 = (e) => tag.venn2Compare = e.target.innerText
+
+    tag.setWiki6Source = (e) => tag.wiki6Source = e.target.value
+    tag.setWiki6Target = (e) => tag.wiki6Target = e.target.value
 
     let generateQueryArr = (qOpts, word, varName) => {
         let retArr = []
