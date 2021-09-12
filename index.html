@@ -31,7 +31,7 @@
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/riot/3.13.2/riot+compiler.min.js"></script>
 
 	<title>
-		Write Aid v0.2
+		Write Aid v0.3
 	</title>
 
 <script
@@ -184,6 +184,8 @@
             position: absolute;
             right:0;
             padding: 11px 0;
+            top: 0;
+            color: lightgray;
         }
 
         .web-app .venn-word {
@@ -211,6 +213,43 @@
 
         .web-app .btn.btn-large {
         }
+
+       
+
+        /* Extra small devices (phones, 600px and down) */
+        @media only screen and (max-width: 600px) {
+            .web-app .nav {
+                display: block;
+            }
+
+            .nav-tabs .nav-item.show .nav-link, .nav-tabs .nav-link.active {
+                border: none;
+            }
+
+            .btn.btn-large, .btn.btn-large + .social-count {
+                width: 100%;
+            }
+
+            .web-app .hide-on-small {
+                display: none;
+            }
+        }
+
+        /* Small devices (portrait tablets and large phones, 600px and up) */
+        @media only screen and (min-width: 600px) {}
+        
+        /* Medium devices (landscape tablets, 768px and up) */
+        @media only screen and (min-width: 768px) {}
+        
+        /* Large devices (laptops/desktops, 992px and up) */
+        @media only screen and (min-width: 992px) {}
+        
+        /* Extra large devices (large laptops and desktops, 1200px and up) */
+        @media only screen and (min-width: 1200px) {}
+
+        .btn.btn-large, .btn.btn-large + .social-count {
+            font-size: inherit;
+        }
     </style>
   	<div class="web-app">
 
@@ -219,7 +258,7 @@
                 <a class="nav-link active" id="home-tab" data-toggle="tab" href="#home" role="tab" aria-controls="home" aria-selected="true">Word Search</a>
             </li>
 
-            <li class="nav-item">
+            <li class="nav-item hide-on-small">
                 <a class="nav-link" id="profile-tab" data-toggle="tab" href="#profile" role="tab" aria-controls="profile" aria-selected="false">Mindmap</a>
             </li>
 
@@ -237,10 +276,9 @@
 
 
             <li class="version-info">
-                Write Aid v0.2
+                Write Aid v0.3
             </li>
-        </ul
-        >
+        </ul>
         <div class="tab-content" id="myTabContent">
             <div class="tab-pane fade show active" id="home" role="tabpanel" aria-labelledby="home-tab">
 
@@ -256,9 +294,9 @@
 
             </div>
 
-            <div class="tab-pane fade" id="profile" role="tabpanel" aria-labelledby="profile-tab">
+            <div class="tab-pane fade hide-on-small" id="profile" role="tabpanel" aria-labelledby="profile-tab">
                 <div>
-                    <iframe src="https://tobloef.com/text2mindmap/" width="100%" height="800px" border="0"></iframe>
+                    <iframe src="{ window.outerWidth > 600 ? 'https://tobloef.com/text2mindmap/' : '' }" width="100%" height="800px" border="0"></iframe>
                 </div>
 
                 <div>
